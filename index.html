@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#6C3CE1" />
+  <meta name="description" content="BOOST – The Ultimate Card Passing Party Game for friends, family, and parties!" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BOOST" />
+  <title>BOOST – Card Passing Party Game</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  SPLASH SCREEN                                                   -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-splash" class="screen active">
+    <div class="splash-bg"></div>
+    <div class="splash-content">
+      <div class="splash-logo">
+        <div class="logo-ring"></div>
+        <span class="logo-text">BOOST</span>
+        <div class="logo-lightning">⚡</div>
+      </div>
+      <p class="splash-tagline">The Ultimate Card Passing Party Game</p>
+      <div class="splash-loader">
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+        <span class="loader-label">Loading…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  HOME SCREEN                                                     -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-home" class="screen">
+    <header class="home-header">
+      <div class="home-logo">⚡ BOOST</div>
+      <div class="home-header-actions">
+        <button class="icon-btn" id="btn-profile-icon" title="Profile" aria-label="Profile">👤</button>
+        <button class="icon-btn" id="btn-settings-icon" title="Settings" aria-label="Settings">⚙️</button>
+      </div>
+    </header>
+
+    <div class="home-hero">
+      <div class="hero-cards">
+        <div class="hero-card c1">🌹</div>
+        <div class="hero-card c2">🌻</div>
+        <div class="hero-card c3">⚡</div>
+        <div class="hero-card c4">🌺</div>
+      </div>
+      <h1 class="hero-title">Ready to <span class="accent">BOOST?</span></h1>
+      <p class="hero-sub">Pass cards, collect sets, shout BOOST!</p>
+    </div>
+
+    <div class="home-actions">
+      <button class="btn-primary btn-huge" id="btn-quick-play">⚡ Quick Play</button>
+      <div class="home-grid">
+        <button class="home-tile" id="btn-create-room">
+          <span class="tile-icon">🏠</span>
+          <span class="tile-label">Create Room</span>
+        </button>
+        <button class="home-tile" id="btn-join-room">
+          <span class="tile-icon">🔗</span>
+          <span class="tile-label">Join Room</span>
+        </button>
+        <button class="home-tile" id="btn-ai-game">
+          <span class="tile-icon">🤖</span>
+          <span class="tile-label">vs AI Bots</span>
+        </button>
+        <button class="home-tile" id="btn-tournament">
+          <span class="tile-icon">🏆</span>
+          <span class="tile-label">Tournament</span>
+        </button>
+        <button class="home-tile" id="btn-leaderboard-nav">
+          <span class="tile-icon">📊</span>
+          <span class="tile-label">Leaderboard</span>
+        </button>
+        <button class="home-tile" id="btn-how-to-play">
+          <span class="tile-icon">📖</span>
+          <span class="tile-label">How to Play</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="home-stats-bar">
+      <div class="stat-item"><span class="stat-val" id="stat-wins">0</span><span class="stat-label">Wins</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-val" id="stat-level">1</span><span class="stat-label">Level</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="stat-val" id="stat-xp">0</span><span class="stat-label">XP</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  CREATE ROOM SCREEN                                              -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-create-room" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" data-target="screen-home">← Back</button>
+      <h2>Create Room</h2>
+    </div>
+    <div class="screen-body">
+      <div class="form-section">
+        <label class="form-label">Your Name</label>
+        <input type="text" id="host-name" class="form-input" placeholder="Enter your name" maxlength="20" />
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Game Mode</label>
+        <div class="mode-grid" id="mode-selector">
+          <button class="mode-btn active" data-mode="classic">🎮 Classic</button>
+          <button class="mode-btn" data-mode="speed">⚡ Speed</button>
+          <button class="mode-btn" data-mode="survival">💀 Survival</button>
+          <button class="mode-btn" data-mode="chaos">🌀 Chaos</button>
+          <button class="mode-btn" data-mode="team">👥 Team</button>
+          <button class="mode-btn" data-mode="custom">🔧 Custom</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Card Category</label>
+        <select id="card-category" class="form-select">
+          <option value="colors">🎨 Colors</option>
+          <option value="flowers">🌸 Flowers</option>
+          <option value="fruits">🍎 Fruits</option>
+          <option value="animals">🦁 Animals</option>
+          <option value="actors">🎭 Actors</option>
+          <option value="actresses">🌟 Actresses</option>
+          <option value="chocolates">🍫 Chocolates</option>
+          <option value="cars">🚗 Cars</option>
+          <option value="countries">🌍 Countries</option>
+          <option value="custom">✏️ Custom</option>
+        </select>
+      </div>
+
+      <div id="custom-category-section" class="form-section hidden">
+        <label class="form-label">Custom Items (comma separated)</label>
+        <textarea id="custom-items" class="form-input" rows="3" placeholder="Apple, Banana, Cherry, Mango…"></textarea>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Passing Direction</label>
+        <div class="toggle-group" id="direction-selector">
+          <button class="toggle-btn active" data-dir="clockwise">↩️ Clockwise</button>
+          <button class="toggle-btn" data-dir="counterclockwise">↪️ Counter</button>
+          <button class="toggle-btn" data-dir="random">🎲 Random</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Players: <span id="player-count-display">4</span></label>
+        <input type="range" id="player-count" min="4" max="50" value="4" class="range-input" />
+        <div class="range-labels"><span>4</span><span>50</span></div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Room Type</label>
+        <div class="toggle-group" id="room-type-selector">
+          <button class="toggle-btn active" data-type="local">📱 Pass & Play</button>
+          <button class="toggle-btn" data-type="wifi">📶 Local WiFi</button>
+          <button class="toggle-btn" data-type="online">🌐 Online</button>
+        </div>
+      </div>
+
+      <div class="form-section" id="ai-section">
+        <label class="form-label">Add AI Bots</label>
+        <div class="toggle-group" id="ai-difficulty">
+          <button class="toggle-btn" data-ai="none">None</button>
+          <button class="toggle-btn active" data-ai="easy">Easy</button>
+          <button class="toggle-btn" data-ai="medium">Medium</button>
+          <button class="toggle-btn" data-ai="hard">Hard</button>
+          <button class="toggle-btn" data-ai="expert">Expert</button>
+        </div>
+      </div>
+
+      <button class="btn-primary btn-full" id="btn-start-create">Create Room ✨</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  JOIN ROOM SCREEN                                                -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-join-room" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" data-target="screen-home">← Back</button>
+      <h2>Join Room</h2>
+    </div>
+    <div class="screen-body">
+      <div class="form-section">
+        <label class="form-label">Your Name</label>
+        <input type="text" id="join-name" class="form-input" placeholder="Enter your name" maxlength="20" />
+      </div>
+      <div class="form-section">
+        <label class="form-label">Room Code</label>
+        <div class="code-input-group">
+          <input type="text" id="room-code-input" class="form-input code-input" placeholder="e.g. ABC123" maxlength="6" autocapitalize="characters" />
+          <button class="btn-secondary" id="btn-scan-qr">📷 QR</button>
+        </div>
+      </div>
+      <button class="btn-primary btn-full" id="btn-join-submit">Join Room 🚀</button>
+
+      <div class="divider-label">— OR —</div>
+
+      <div class="form-section">
+        <label class="form-label">Recent Rooms</label>
+        <div id="recent-rooms-list" class="recent-list">
+          <p class="empty-msg">No recent rooms yet</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  LOBBY SCREEN                                                    -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-lobby" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" id="btn-lobby-back">← Leave</button>
+      <h2>Game Lobby</h2>
+      <button class="icon-btn" id="btn-share-room">📤</button>
+    </div>
+    <div class="screen-body">
+      <div class="lobby-room-info">
+        <div class="room-code-display">
+          <span class="room-code-label">Room Code</span>
+          <span class="room-code-value" id="display-room-code">------</span>
+          <button class="copy-btn" id="btn-copy-code">📋 Copy</button>
+        </div>
+        <div class="room-qr" id="lobby-qr"></div>
+      </div>
+
+      <div class="lobby-settings-summary" id="lobby-settings-summary"></div>
+
+      <div class="lobby-players-section">
+        <h3>Players <span id="lobby-player-count">0</span>/<span id="lobby-max-players">4</span></h3>
+        <div id="lobby-players-list" class="players-grid"></div>
+      </div>
+
+      <div id="host-controls" class="host-controls hidden">
+        <button class="btn-secondary btn-full" id="btn-add-bot">🤖 Add Bot</button>
+        <button class="btn-primary btn-full" id="btn-start-game">Start Game ⚡</button>
+      </div>
+
+      <div id="guest-waiting" class="guest-waiting hidden">
+        <div class="waiting-spinner"></div>
+        <p>Waiting for host to start…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  GAME SCREEN                                                     -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+    <!-- Top HUD -->
+    <div class="game-hud">
+      <div class="hud-left">
+        <span class="hud-round">Round <span id="hud-round-num">1</span></span>
+        <span class="hud-mode" id="hud-mode-badge">Classic</span>
+      </div>
+      <div class="hud-center">
+        <div class="hud-timer hidden" id="hud-timer">
+          <span id="hud-timer-val">30</span>s
+        </div>
+      </div>
+      <div class="hud-right">
+        <button class="icon-btn sm" id="btn-game-chat">💬</button>
+        <button class="icon-btn sm" id="btn-game-menu">⋯</button>
+      </div>
+    </div>
+
+    <!-- Direction Indicator -->
+    <div class="direction-bar">
+      <div class="direction-indicator" id="direction-indicator">
+        <span id="direction-arrow">↩️</span>
+        <span id="direction-text">Clockwise</span>
+      </div>
+      <div class="boost-owner-badge hidden" id="boost-owner-badge">
+        ⚡ <span id="boost-owner-name">?</span> has BOOST
+      </div>
+    </div>
+
+    <!-- Players Ring -->
+    <div class="players-ring" id="players-ring"></div>
+
+    <!-- Current Player Info -->
+    <div class="current-player-zone">
+      <div class="cp-label">YOUR HAND</div>
+      <div class="cp-cards" id="player-hand"></div>
+      <div class="cp-actions">
+        <div class="pass-controls" id="pass-controls">
+          <button class="btn-secondary" id="btn-pass-left">← Pass Left</button>
+          <button class="btn-secondary" id="btn-pass-right">Pass Right →</button>
+        </div>
+        <div class="last-received-label" id="last-received-label"></div>
+      </div>
+    </div>
+
+    <!-- BOOST Button -->
+    <div class="boost-btn-zone">
+      <button class="boost-btn" id="boost-btn" disabled>
+        <span class="boost-btn-inner">
+          <span class="boost-icon">⚡</span>
+          <span class="boost-text">BOOST!</span>
+        </span>
+        <div class="boost-ripple"></div>
+      </button>
+    </div>
+
+    <!-- Chat Panel -->
+    <div class="chat-panel hidden" id="chat-panel">
+      <div class="chat-header">
+        <span>💬 Chat</span>
+        <button class="icon-btn" id="btn-close-chat">✕</button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-quick">
+        <button class="quick-msg" data-msg="Good game! 👍">👍</button>
+        <button class="quick-msg" data-msg="Nice move! 🔥">🔥</button>
+        <button class="quick-msg" data-msg="Lucky! 😅">😅</button>
+        <button class="quick-msg" data-msg="Let's go! 🚀">🚀</button>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-input" class="form-input sm" placeholder="Type…" maxlength="100" />
+        <button class="btn-primary sm" id="btn-send-chat">Send</button>
+      </div>
+    </div>
+
+    <!-- Game Menu -->
+    <div class="game-menu-panel hidden" id="game-menu-panel">
+      <div class="game-menu-content">
+        <h3>Game Menu</h3>
+        <button class="btn-secondary btn-full" id="btn-resume-game">▶ Resume</button>
+        <button class="btn-secondary btn-full" id="btn-toggle-sound">🔊 Sound: On</button>
+        <button class="btn-secondary btn-full" id="btn-rules-ingame">📖 Rules</button>
+        <button class="btn-danger btn-full" id="btn-quit-game">🚪 Quit Game</button>
+      </div>
+    </div>
+
+    <!-- Chaos Event Banner -->
+    <div class="chaos-banner hidden" id="chaos-banner">
+      <span id="chaos-event-text">🌀 Chaos Event!</span>
+    </div>
+
+    <!-- Pass Animation Overlay -->
+    <div class="pass-anim-overlay hidden" id="pass-anim-overlay">
+      <div class="flying-card" id="flying-card"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  RESULTS SCREEN                                                  -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-results" class="screen">
+    <div class="results-bg"></div>
+    <div class="confetti-container" id="confetti-container"></div>
+    <div class="results-content">
+      <div class="winner-trophy">🏆</div>
+      <h1 class="winner-title">Winner!</h1>
+      <div class="winner-name" id="winner-name-display">Player 1</div>
+      <div class="winner-cards" id="winner-cards-display"></div>
+
+      <div class="results-stats">
+        <div class="result-stat"><span class="rs-val" id="rs-time">0s</span><span class="rs-label">Time</span></div>
+        <div class="result-stat"><span class="rs-val" id="rs-cards">0</span><span class="rs-label">Cards Passed</span></div>
+        <div class="result-stat"><span class="rs-val" id="rs-xp">+50</span><span class="rs-label">XP Earned</span></div>
+      </div>
+
+      <div class="results-leaderboard" id="results-leaderboard"></div>
+
+      <div class="results-actions">
+        <button class="btn-primary" id="btn-play-again">🔄 Play Again</button>
+        <button class="btn-secondary" id="btn-home-from-results">🏠 Home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  PROFILE SCREEN                                                  -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-profile" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" data-target="screen-home">← Back</button>
+      <h2>Profile</h2>
+      <button class="icon-btn" id="btn-edit-profile">✏️</button>
+    </div>
+    <div class="screen-body">
+      <div class="profile-hero">
+        <div class="avatar-display" id="profile-avatar">🎮</div>
+        <div class="profile-name-level">
+          <h2 id="profile-username">Player</h2>
+          <div class="level-badge">Lv <span id="profile-level">1</span></div>
+        </div>
+        <div class="xp-bar-container">
+          <div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div>
+          <span class="xp-bar-label"><span id="xp-current">0</span> / <span id="xp-next">100</span> XP</span>
+        </div>
+      </div>
+
+      <div class="profile-stats-grid">
+        <div class="pstat"><span class="pstat-v" id="ps-wins">0</span><span class="pstat-l">Wins</span></div>
+        <div class="pstat"><span class="pstat-v" id="ps-losses">0</span><span class="pstat-l">Losses</span></div>
+        <div class="pstat"><span class="pstat-v" id="ps-winrate">0%</span><span class="pstat-l">Win Rate</span></div>
+        <div class="pstat"><span class="pstat-v" id="ps-tournaments">0</span><span class="pstat-l">Tournaments</span></div>
+        <div class="pstat"><span class="pstat-v" id="ps-boosts">0</span><span class="pstat-l">BOOSTs</span></div>
+        <div class="pstat"><span class="pstat-v" id="ps-coins">0</span><span class="pstat-l">🪙 Coins</span></div>
+      </div>
+
+      <div class="achievements-section">
+        <h3>Achievements</h3>
+        <div class="achievements-grid" id="achievements-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  LEADERBOARD SCREEN                                              -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-leaderboard" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" data-target="screen-home">← Back</button>
+      <h2>Leaderboard</h2>
+    </div>
+    <div class="screen-body">
+      <div class="lb-tabs">
+        <button class="lb-tab active" data-period="daily">Daily</button>
+        <button class="lb-tab" data-period="weekly">Weekly</button>
+        <button class="lb-tab" data-period="monthly">Monthly</button>
+        <button class="lb-tab" data-period="alltime">All Time</button>
+      </div>
+      <div class="lb-list" id="lb-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  SETTINGS SCREEN                                                 -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-settings" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" data-target="screen-home">← Back</button>
+      <h2>Settings</h2>
+    </div>
+    <div class="screen-body">
+      <div class="settings-group">
+        <h3>Appearance</h3>
+        <div class="setting-row">
+          <span>Dark Mode</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-dark-mode" checked />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Large Text</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-large-text" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Color Blind Mode</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-colorblind" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Reduce Animations</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-reduce-motion" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3>Audio</h3>
+        <div class="setting-row">
+          <span>Background Music</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-music" checked />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Sound Effects</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-sfx" checked />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Master Volume</span>
+          <input type="range" id="setting-volume" min="0" max="100" value="70" class="range-input" />
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3>Language</h3>
+        <select id="setting-language" class="form-select">
+          <option value="en">🇬🇧 English</option>
+          <option value="hi">🇮🇳 Hindi</option>
+          <option value="ta">🇮🇳 Tamil</option>
+          <option value="es">🇪🇸 Spanish</option>
+          <option value="fr">🇫🇷 French</option>
+          <option value="de">🇩🇪 German</option>
+          <option value="pt">🇧🇷 Portuguese</option>
+          <option value="ar">🇸🇦 Arabic</option>
+          <option value="zh">🇨🇳 Chinese</option>
+          <option value="ja">🇯🇵 Japanese</option>
+        </select>
+      </div>
+
+      <div class="settings-group">
+        <h3>Account</h3>
+        <div class="setting-row">
+          <span>Username</span>
+          <input type="text" id="setting-username" class="form-input sm" placeholder="Your name" maxlength="20" />
+        </div>
+        <div class="setting-row">
+          <span>Avatar</span>
+          <div class="avatar-picker" id="avatar-picker">
+            <span data-av="🎮">🎮</span><span data-av="🦁">🦁</span>
+            <span data-av="🐯">🐯</span><span data-av="🦊">🦊</span>
+            <span data-av="🐺">🐺</span><span data-av="🦅">🦅</span>
+            <span data-av="🐉">🐉</span><span data-av="🦄">🦄</span>
+          </div>
+        </div>
+        <button class="btn-secondary btn-full" id="btn-save-settings">💾 Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  HOW TO PLAY SCREEN                                              -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-how-to-play" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" data-target="screen-home">← Back</button>
+      <h2>How to Play</h2>
+    </div>
+    <div class="screen-body">
+      <div class="rules-section">
+        <div class="rule-card">
+          <div class="rule-num">01</div>
+          <h3>Setup</h3>
+          <p>The host picks a category (Colors, Fruits, Animals…). Each item appears exactly 3 times plus one special <strong>⚡ BOOST</strong> card.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-num">02</div>
+          <h3>Dealing</h3>
+          <p>Every player gets 3 cards. One random player also receives the BOOST card, giving them 4 cards to start.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-num">03</div>
+          <h3>Passing</h3>
+          <p>Players pass one card at a time in the chosen direction. You <strong>cannot</strong> immediately pass back the card you just received.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-num">04</div>
+          <h3>Winning</h3>
+          <p>Collect 3 identical cards and immediately press the <strong>BOOST</strong> button. First valid player wins the round!</p>
+        </div>
+        <div class="rule-card warning-card">
+          <div class="rule-num">⚠️</div>
+          <h3>Penalties</h3>
+          <p>False BOOST = elimination. Invalid move = warning. 3 warnings = elimination.</p>
+        </div>
+        <div class="rule-card boost-card-rule">
+          <div class="rule-num">⚡</div>
+          <h3>BOOST Card</h3>
+          <p>The BOOST card rotates after each round. Track who holds it — a badge shows the current owner.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  TOURNAMENT SCREEN                                               -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="screen-tournament" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" data-target="screen-home">← Back</button>
+      <h2>🏆 Tournament</h2>
+    </div>
+    <div class="screen-body">
+      <div class="form-section">
+        <label class="form-label">Tournament Name</label>
+        <input type="text" id="tournament-name" class="form-input" placeholder="BOOST Championship" maxlength="30" />
+      </div>
+      <div class="form-section">
+        <label class="form-label">Number of Players</label>
+        <input type="range" id="tournament-players" min="4" max="32" value="8" class="range-input" />
+        <div class="range-display"><span id="tournament-player-display">8</span> players</div>
+      </div>
+      <div class="form-section">
+        <label class="form-label">Rounds</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" data-rounds="3">3 Rounds</button>
+          <button class="toggle-btn" data-rounds="5">5 Rounds</button>
+          <button class="toggle-btn" data-rounds="7">7 Rounds</button>
+        </div>
+      </div>
+      <div class="tournament-bracket" id="tournament-bracket">
+        <p class="empty-msg">Configure tournament to see bracket</p>
+      </div>
+      <button class="btn-primary btn-full" id="btn-start-tournament">Start Tournament 🏆</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--  GLOBAL OVERLAY / MODAL                                          -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-box" id="modal-box">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Install Banner -->
+  <div id="install-banner" class="install-banner hidden">
+    <span>📲 Install BOOST for offline play!</span>
+    <button id="btn-install">Install</button>
+    <button id="btn-dismiss-install">✕</button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="firebase.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
